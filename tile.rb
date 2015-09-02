@@ -7,7 +7,7 @@ class Tile
     @bomb = bomb_flag
     @revealed = false
     @flagged = false
-    @cheat = true
+    @cheat = false
   end
 
   def reveal

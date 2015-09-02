@@ -1,15 +1,27 @@
 require './board.rb'
 require './tile.rb'
 require 'yaml'
+require "io/console"
 
 class Minesweeper
 
-  def initialize(dimensions = 9, bombs = 10, savefile = nil)
-    if savefile
-      @board = YAML::load(File.read(savefile))
+  def initialize(dimensions = 9, bombs = 10)
+    file_name = load_from_file
+    if file_name && file = File.read(file_name)
+      @board = YAML::load(file)
     else
       @board = Board.new(dimensions, bombs)
     end
+  end
+
+  def load_from_file
+    puts "Would you like to load an existing game? ('y' or 'n')"
+    input = gets.chomp.downcase
+    if input == 'y'
+      puts "Enter the file name with the extension"
+      return gets.chomp
+    end
+    nil
   end
 
   def play
@@ -42,7 +54,7 @@ class Minesweeper
   def prompt_for_save
     print "Press 's' for save: "
     if gets.chomp == 's'
-      puts "Enter filename:"
+      puts "Enter filename with '.txt' extension:"
       File.open(gets.chomp,'w') do |f|
        f.puts(@board.to_yaml)
      end
